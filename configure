@@ -1,0 +1,22 @@
+if  ! type -p node; then
+  mkdir ~/local
+  echo 'export PATH=$HOME/local/bin:$PATH' >> ~/.bashrc
+  git clone git://github.com/ry/node.git
+  cd node
+  ./configure --prefix=~/local
+  make install
+  cd ..
+  rm -rf node
+fi
+
+if  ! type -p npm; then
+  git clone git://github.com/isaacs/npm.git
+  cd npm
+  make install
+  cd ..
+  rm -rf npm
+fi
+
+git submodule init
+git submodule update
+npm install jake nodeunit sinon catchjs glob
