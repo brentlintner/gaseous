@@ -16,7 +16,6 @@
   "bin": "./bin/gaseous",
   "main": "./lib/gaseous"
   "dependencies": {
-    "argsparser": "",
-    "node-uuid": ""
+    "argsparser": ""
   }
 }
