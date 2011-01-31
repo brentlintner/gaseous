@@ -1,0 +1,22 @@
+{
+  "name": "gaseous",
+  "version": "0.0.1",
+  "description": "",
+  "homepage": "http://github.com/brentlintner/gaseous",
+  "author": "brentlintner",
+  "contributors": [{
+    "name": "Brent Lintner",
+    "email": "brent.lintner@gmail.com",
+    "url": "http://github.com/brentlintner"
+  }],
+  "licenses": [{
+    "type": "MIT",
+    "url": ""
+  }],
+  "bin": "./bin/gaseous",
+  "main": "./lib/gaseous"
+  "dependencies": {
+    "argsparser": "",
+    "node-uuid": ""
+  }
+}
