@@ -16,19 +16,11 @@ module.exports = require('nodeunit').testCase({
         done();
     },
 
-    "regisers for readFile": function (test) {
-        s.mock(observable)
-            .expects("on")
-            .once()
-            .withArgs("gaseous-fs-readFile");
-
-        gfs.watch(observable);
-        test.done();
-    },
-
     "responds to readFile": function (test) {
         var file = "some_file",
-            encoding = "utf-8";
+            encoding = "utf-8",
+            callback = null,
+            id = "1";
 
         s.mock(fs)
             .expects("readFile")
@@ -36,7 +28,24 @@ module.exports = require('nodeunit').testCase({
             .withArgs(file, encoding);
 
         gfs.watch(observable);
-        observable.emit("gaseous-fs-readFile", [file, encoding]);
+        observable.emit("gaseous-fs-readFile", [file, encoding, callback, id]);
+        setTimeout(test.done, 1);
+    },
+
+    "responds to writeFile": function (test) {
+        var file = "some_file",
+            data = "why so serious",
+            callback = null,
+            encoding = "utf-8",
+            id = "1";
+
+        s.mock(fs)
+            .expects("writeFile")
+            .once()
+            .withArgs(file, data, encoding);
+
+        gfs.watch(observable);
+        observable.emit("gaseous-fs-writeFile", [file, data, encoding, callback, id]);
         setTimeout(test.done, 1);
     },
 
@@ -50,7 +59,7 @@ module.exports = require('nodeunit').testCase({
             };
 
         fs.readFile = function (filename, encoding, callback) {
-            callback({}, sendData.args[1]);
+            callback(null, sendData.args[1]);
         };
 
         // end point where client takes over (see client tests)
@@ -63,6 +72,34 @@ module.exports = require('nodeunit').testCase({
 
         setTimeout(function () {
             fs.readFile = fs_readFile;
+            test.done();
+        }, 1);
+    },
+
+    "writeFile emits data on success": function (test) {
+        var fs_writeFile = fs.writeFile,
+            file = "some_file",
+            encoding = "utf-8",
+            data = "asdf",
+            sendData = {
+                id: "ID",
+                args: []
+            };
+
+        fs.writeFile = function (filename, data, encoding, callback) {
+            callback();
+        };
+
+        // end point where client takes over (see client tests)
+        observable.on("gaseous-socket-send",
+            s.mock().once().withExactArgs(sendData));
+
+        gfs.watch(observable);
+
+        observable.emit("gaseous-fs-writeFile", [file, data, encoding, null, sendData.id], true);
+
+        setTimeout(function () {
+            fs.writeFile = fs_writeFile;
             test.done();
         }, 1);
     }

@@ -3,5 +3,13 @@ window.addEventListener("load", function (event) {
         lib.fs.readFile("README.md", "utf-8", function (err, data) {
             document.querySelector('body').innerHTML = "<pre>" + data + "</pre>";
         });
+
+        lib.fs.writeFile("TEST.md", "HELLO WORLD!", "utf-8", function (err) {
+            if (err) {
+                throw err;
+            }
+
+            console.log("Saved!");
+        });
     });
 });

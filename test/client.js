@@ -55,14 +55,30 @@ module.exports = require('nodeunit').testCase({
             });
 
         client.listen(null, null, function (lib) {
-            // just checking one method for now
-            test.equal(typeof lib.fs, "object", "fs is not an object");
-            test.equal(typeof lib.fs.readFile, "function", "fs.readFile is not a function");
             test.done();
         });
 
         test.ok(socket.on.calledTwice, "expected socket.on to be called once");
         test.ok(socket.on.calledWith('message'), "expected socket.on to be called with message event");
+    },
+
+    "client exposes the fs module": function (test) {
+        s.stub(io, "Socket")
+            .returns(socket = {
+                connect: s.spy(),
+                send: s.spy(),
+                on: s.spy(function (type, callback) {
+                    if (type === "connect") callback();
+                })
+            });
+
+        client.listen(null, null, function (lib) {
+            // just checking one method for now
+            test.equal(typeof lib.fs, "object", "fs is not an object");
+            test.equal(typeof lib.fs.readFile, "function", "fs.readFile is not a function");
+            test.equal(typeof lib.fs.writeFile, "function", "fs.writeFile is not a function");
+            test.done();
+        });
     },
 
     "client sends method when receieved": function (test) {
