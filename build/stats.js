@@ -49,13 +49,13 @@ module.exports = function showStats() {
         }
     }
 
-	function printTotals() {
+    function printTotals() {
         sys.puts("+-----------------------------------+--------+--------+");
         sys.print("| Total                             |");
         sys.print(" " + total_lines + spaces(7 - String(total_lines).length) + "|");
         sys.puts(" " + total_loc + spaces(7 - String(total_loc).length) + "|");
         sys.puts("+-----------------------------------+--------+--------+");
-	}
+    }
 
     collect(["lib/gaseous/*.js"], function (lib) {
         var lib_loc = 0;
@@ -68,7 +68,7 @@ module.exports = function showStats() {
 
         lib.forEach(parseFile);
 
-		printTotals();
+        printTotals();
 
         lib_loc = total_loc;
 
@@ -81,7 +81,7 @@ module.exports = function showStats() {
 
             tests.forEach(parseFile);
 
-			printTotals();
+            printTotals();
 
             sys.puts("| Ratio (tests/lib) (" + (total_loc / lib_loc) + ")");
             sys.puts("+-----------------------------------+--------+--------+");
