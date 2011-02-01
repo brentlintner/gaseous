@@ -11,7 +11,7 @@ module.exports = require('nodeunit').testCase({
 
     tearDown: function (done) {
         s.verifyAndRestore();
-        observable = undefined;
+        observable = null;
         done();
     },
 
