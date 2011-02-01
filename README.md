@@ -85,5 +85,6 @@ For example, for fs.readFile the packet would look something like this:
 ## TODO
 
 * mixin EventEmitter instead of using Observable class
-* agnosticise the server module for any api call (socket-receive)
+* agnosticise the server module for any api call
 * handle multiple connections
+* pass in an optional server to bind to instead of creating one (i.e. support express, connect etc)
