@@ -18,7 +18,7 @@
     "url": ""
   }],
   "bin": "./bin/gaseous",
-  "main": "./lib/gaseous"
+  "main": "./lib/gaseous",
   "dependencies": {
     "argsparser": ""
   }
