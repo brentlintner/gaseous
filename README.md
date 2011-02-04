@@ -3,7 +3,7 @@
 Note: currently a work in progress.
 
 Gaseous exposes nodejs module apis to the browser (asynchronously).
-Currently there is only support for the fs module, but any non-blocking module call can be supported.
+Currently there is only support for (most of) the fs module, but any non-blocking module call can be supported.
 That is, a call like fs.readFileSync will not work as expected whereas fs.readFile will.
 
 ## Install
@@ -72,19 +72,31 @@ So if you want to use something like fs.readFileSync it will not work as expecte
 
 For example, for fs.readFile the packet would look something like this:
 
-    var packet = {
+    {
         "id": "uuid",
         "method": "fs-readFile",
         "args": [
             "relative/directory/file",
             "utf-8",
-            null
+            null // callback placeholder
         ]
-    };
+    }
+
+The server will then process the packet, call the appropriate module method and a message will be sent back to the client with the results of the call.
+
+For example, a successful call (to say fs.readFile) would look something like this:
+
+    {
+        "id": "uuid",
+        "args": [
+            null,
+            "file_data"
+        ]
+    }
 
 ## TODO
 
+* handle Buffer objects properly (get mangled in stringify)
 * mixin EventEmitter instead of using Observable class
-* agnosticise the server module for any api call
-* handle multiple connections
+* handle multiple connections (i.e. listen on multiple ports)
 * pass in an optional server to bind to instead of creating one (i.e. support express, connect etc)
