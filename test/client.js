@@ -30,38 +30,21 @@ module.exports = require('nodeunit').testCase({
             .returns(socket = {
                 connect: s.spy(),
                 send: s.mock(),
-                on: function (type, callback) {
-                    if (type === "connect") callback();
-                }
-            });
-
-        client.listen(null, null, s.mock().once());
-
-        test.ok(socket.connect.calledOnce, "expected socket.connect to be called once");
-        test.done();
-    },
-
-    "client calls ready once connected": function (test) {
-        s.mock(io)
-            .expects("Socket")
-            .once()
-            .withExactArgs('127.0.0.1', {port: 8888})
-            .returns(socket = {
-                connect: s.spy(),
-                send: s.spy(),
                 on: s.spy(function (type, callback) {
                     if (type === "connect") callback();
                 })
             });
 
-        client.listen(null, null, function (lib) {
-            test.done();
-        });
+        // would in reality be async
+        client.listen(null, null, s.mock().once());
 
+        test.ok(socket.connect.calledOnce, "expected socket.connect to be called once");
         test.ok(socket.on.calledTwice, "expected socket.on to be called once");
         test.ok(socket.on.calledWith('message'), "expected socket.on to be called with message event");
+        test.done();
     },
 
+    // TODO: find way to sync this up with other tests (fs in this case)
     "client exposes the fs module": function (test) {
         s.stub(io, "Socket")
             .returns(socket = {
@@ -73,14 +56,15 @@ module.exports = require('nodeunit').testCase({
             });
 
         client.listen(null, null, function (lib) {
-            // just checking one method for now
             test.equal(typeof lib.fs, "object", "fs is not an object");
             test.equal(typeof lib.fs.readFile, "function", "fs.readFile is not a function");
             test.equal(typeof lib.fs.writeFile, "function", "fs.writeFile is not a function");
+            test.equal(typeof lib.fs.stat, "function", "fs.stat is not a function");
             test.done();
         });
     },
 
+    // use fs.readFile as an example
     "client sends method when receieved": function (test) {
         var receiveMessage,
             receiveData = {
@@ -89,7 +73,7 @@ module.exports = require('nodeunit').testCase({
             },
             sendData = {
                 id: "ID",
-                method: "readFile",
+                method: "fs-readFile",
                 args: ["some_file", "utf-8", null]
             };
 
@@ -115,7 +99,6 @@ module.exports = require('nodeunit').testCase({
             });
 
         client.listen(null, null, function (lib) {
-            // just using readFile for now
             lib.fs.readFile("some_file", "utf-8", function (err, data) {
                 test.strictEqual(data, receiveData.args[1], "unexpected message data");
                 test.done();

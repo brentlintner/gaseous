@@ -123,7 +123,7 @@ module.exports = require('nodeunit').testCase({
         server.watch(bus);
         var data = JSON.stringify({
             id: "ID",
-            method: "readFile",
+            method: "fs-readFile",
             args: []
         });
 
@@ -157,7 +157,7 @@ module.exports = require('nodeunit').testCase({
         server.watch(bus);
         var data = {
                 id: "ID",
-                method: "readFile",
+                method: "fs-readFile",
                 args: ["some_file", "utf-8"]
             },
             socket, client;
