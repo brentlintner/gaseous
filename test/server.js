@@ -190,7 +190,7 @@ module.exports = require('nodeunit').testCase({
         s.mock(bus)
             .expects("emit")
             .once()
-            .withExactArgs("gaseous-fs-readFile", ["some_file", "utf-8", "ID"]);
+            .withExactArgs("gaseous-fs-readFile", ["ID", "some_file", "utf-8"]);
 
         server.bind("some/dir").listen(8888);
 

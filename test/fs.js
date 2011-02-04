@@ -56,7 +56,7 @@ module.exports = require('nodeunit').testCase({
                 id: "ID",
                 args: [null, "file data"]
             },
-            args = ["some_file", "utf-8", null, sendData.id];
+            args = [sendData.id, "some_file", "utf-8", null];
 
         _emitsDataOnCall("readFile", sendData, args, function (filename, encoding, callback) {
             callback.apply(callback, sendData.args);
@@ -68,7 +68,7 @@ module.exports = require('nodeunit').testCase({
                 id: "ID",
                 args: []
             },
-            args = ["some_file", "file_data", "utf-8", null, sendData.id];
+            args = [sendData.id, "some_file", "file_data", "utf-8", null];
 
         _emitsDataOnCall("writeFile", sendData, args, function (filename, data, encoding, callback) {
             callback.apply(callback, sendData.args);
@@ -80,7 +80,7 @@ module.exports = require('nodeunit').testCase({
                 id: "ID",
                 args: [null, {}]
             },
-            args = ["some_path", null, sendData.id];
+            args = [sendData.id, "some_path", null];
 
         _emitsDataOnCall("stat", sendData, args, function (path, callback) {
             callback.apply(callback, sendData.args);
