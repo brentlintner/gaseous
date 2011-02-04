@@ -2,7 +2,42 @@ var s, observable,
     fs = require('fs'),
     gfs = require('./../lib/gaseous/fs');
 
+// tests that an fs event calls it's respective fs method
+function _fsRespondsTo(method, fsArgs, eventArgs, test) {
+    s.mock(fs)
+        .expects(method)
+        .once()
+        .withArgs.apply(s, fsArgs);
+
+    gfs.watch(observable);
+    observable.emit("gaseous-fs-" + method, eventArgs);
+    setTimeout(test.done, 1);
+}
+
+// tests that a fs method emits socket-send properly after being called
+function _emitsDataOnCall(method, sendData, eventArgs, mockMethod, test) {
+    var fs_method = fs.stat;
+
+    // manually mock to return immediate callback call
+    fs[method] = mockMethod;
+
+    // end point where client takes over (see client tests)
+    observable.on("gaseous-socket-send",
+        s.mock().once().withExactArgs(sendData));
+
+    gfs.watch(observable);
+    observable.emit("gaseous-fs-" + method, eventArgs, true);
+
+    setTimeout(function () {
+        fs[method] = fs_method;
+        test.done();
+    }, 1);
+}
+
 module.exports = require('nodeunit').testCase({
+
+    // null is used as a placeholder for a callback function (for form)
+    // since any callbacks get stripped out in the client
 
     setUp: function (done) {
         s = require('sinon').sandbox.create();
@@ -16,92 +51,40 @@ module.exports = require('nodeunit').testCase({
         done();
     },
 
-    "responds to readFile": function (test) {
-        var file = "some_file",
-            encoding = "utf-8",
-            callback = null,
-            id = "1";
-
-        s.mock(fs)
-            .expects("readFile")
-            .once()
-            .withArgs(file, encoding);
-
-        gfs.watch(observable);
-        observable.emit("gaseous-fs-readFile", [file, encoding, callback, id]);
-        setTimeout(test.done, 1);
-    },
-
-    "responds to writeFile": function (test) {
-        var file = "some_file",
-            data = "why so serious",
-            callback = null,
-            encoding = "utf-8",
-            id = "1";
-
-        s.mock(fs)
-            .expects("writeFile")
-            .once()
-            .withArgs(file, data, encoding);
-
-        gfs.watch(observable);
-        observable.emit("gaseous-fs-writeFile", [file, data, encoding, callback, id]);
-        setTimeout(test.done, 1);
-    },
-
-    "readFile emits data on success": function (test) {
-        var fs_readFile = fs.readFile,
-            file = "some_file",
-            encoding = "utf-8",
-            sendData = {
+    "readFile": function (test) {
+        var sendData = {
                 id: "ID",
                 args: [null, "file data"]
-            };
+            },
+            args = [sendData.id, "some_file", "utf-8", null];
 
-        fs.readFile = function (filename, encoding, callback) {
-            callback(null, sendData.args[1]);
-        };
-
-        // end point where client takes over (see client tests)
-        observable.on("gaseous-socket-send",
-            s.mock().once().withExactArgs(sendData));
-
-        gfs.watch(observable);
-
-        observable.emit("gaseous-fs-readFile", [file, encoding, null, sendData.id], true);
-
-        setTimeout(function () {
-            fs.readFile = fs_readFile;
-            test.done();
-        }, 1);
+        _emitsDataOnCall("readFile", sendData, args, function (filename, encoding, callback) {
+            callback.apply(callback, sendData.args);
+        }, test);
     },
 
-    "writeFile emits data on success": function (test) {
-        var fs_writeFile = fs.writeFile,
-            file = "some_file",
-            encoding = "utf-8",
-            data = "asdf",
-            sendData = {
+    "writeFile": function (test) {
+        var sendData = {
                 id: "ID",
                 args: []
-            };
+            },
+            args = [sendData.id, "some_file", "file_data", "utf-8", null];
 
-        fs.writeFile = function (filename, data, encoding, callback) {
-            callback();
-        };
+        _emitsDataOnCall("writeFile", sendData, args, function (filename, data, encoding, callback) {
+            callback.apply(callback, sendData.args);
+        }, test);
+    },
 
-        // end point where client takes over (see client tests)
-        observable.on("gaseous-socket-send",
-            s.mock().once().withExactArgs(sendData));
+    "stat": function (test) {
+        var sendData = {
+                id: "ID",
+                args: [null, {}]
+            },
+            args = [sendData.id, "some_path", null];
 
-        gfs.watch(observable);
-
-        observable.emit("gaseous-fs-writeFile", [file, data, encoding, null, sendData.id], true);
-
-        setTimeout(function () {
-            fs.writeFile = fs_writeFile;
-            test.done();
-        }, 1);
+        _emitsDataOnCall("stat", sendData, args, function (path, callback) {
+            callback.apply(callback, sendData.args);
+        }, test);
     }
 
 });

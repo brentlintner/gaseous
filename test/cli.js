@@ -17,15 +17,15 @@ module.exports = require('nodeunit').testCase({
     },
 
     "interprets help": function (test) {
-        var txt = require('fs').readFileSync(__dirname + "/../README.md", "utf-8"); 
-        s.mock(sys).expects("puts").once().withExactArgs(txt);
+        var txt = require('fs').readFileSync(__dirname + "/../HELP", "utf-8");
+        s.mock(sys).expects("print").once().withExactArgs(txt);
         cli.interpret(["node", "file.js", "help"]);
         test.done();
     },
 
     "interprets no args as help": function (test) {
-        var txt = require('fs').readFileSync(__dirname + "/../README.md", "utf-8"); 
-        s.mock(sys).expects("puts").once().withExactArgs(txt);
+        var txt = require('fs').readFileSync(__dirname + "/../HELP", "utf-8");
+        s.mock(sys).expects("print").once().withExactArgs(txt);
         cli.interpret(["node", "file.js"]);
         test.done();
     },
