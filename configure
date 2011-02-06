@@ -1,18 +1,19 @@
-#! /bin/sh
+#! /usr/bin/env bash
 
-if ! which node; then
+if ! type node &> /dev/null; then
   mkdir ~/local
   echo 'export PATH=$HOME/local/bin:$PATH' >> ~/.bashrc
-  git clone -o master git://github.com/ry/node.git
+  git clone --depth 1 git://github.com/ry/node.git
   cd node
   ./configure --prefix=~/local
   make install
   cd ..
   rm -rf node
+  echo 'export PATH=$HOME/local/bin:$PATH' >> ~/.bashrc
 fi
 
-if ! which npm; then
-  git clone -o master git://github.com/isaacs/npm.git
+if ! type npm &> /dev/null; then
+  git clone --depth 1 git://github.com/isaacs/npm.git
   cd npm
   make install
   cd ..
