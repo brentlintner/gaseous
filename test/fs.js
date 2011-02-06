@@ -1,22 +1,9 @@
-var s, observable,
-    fs = require('fs'),
-    gfs = require('./../lib/gaseous/fs');
-
-// tests that an fs event calls it's respective fs method
-function _fsRespondsTo(method, fsArgs, eventArgs, test) {
-    s.mock(fs)
-        .expects(method)
-        .once()
-        .withArgs.apply(s, fsArgs);
-
-    gfs.watch(observable);
-    observable.emit("gaseous-fs-" + method, eventArgs);
-    setTimeout(test.done, 1);
-}
+var s, observable, gfs,
+    fs = require('fs');
 
 // tests that a fs method emits socket-send properly after being called
 function _emitsDataOnCall(method, sendData, eventArgs, mockMethod, test) {
-    var fs_method = fs.stat;
+    var fs_method = fs[method];
 
     // manually mock to return immediate callback call
     fs[method] = mockMethod;
@@ -25,7 +12,8 @@ function _emitsDataOnCall(method, sendData, eventArgs, mockMethod, test) {
     observable.on("gaseous-socket-send",
         s.mock().once().withExactArgs(sendData));
 
-    gfs.watch(observable);
+    gfs = require('./../lib/gaseous/map/fs')(observable);
+
     observable.emit("gaseous-fs-" + method, eventArgs, true);
 
     setTimeout(function () {
