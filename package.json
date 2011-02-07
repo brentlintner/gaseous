@@ -18,7 +18,7 @@
     "url": "http://www.opensource.org/licenses/mit-license.php"
   }],
   "bin": "./bin/gaseous",
-  "main": "./lib/gaseous",
+  "main": "./lib",
   "dependencies": {
     "argsparser": "*"
   }

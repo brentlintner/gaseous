@@ -6,7 +6,7 @@ module.exports = require('nodeunit').testCase({
 
     setUp: function (done) {
         s = require('sinon').sandbox.create();
-        client = require('./../lib/gaseous/client');
+        client = require('./../lib/client');
         s.stub(console, "log"); // hide all console logs, beware!
         // just return a mock object if not mocked itself
         global.io = {Socket: function () {

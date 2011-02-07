@@ -1,8 +1,8 @@
 var s,
     fs = require('fs'),
     sys = require('sys'),
-    server = require('./../lib/gaseous/server'),
-    cli = require('./../lib/gaseous/cli');
+    server = require('./../lib/server'),
+    cli = require('./../lib/cli');
 
 module.exports = require('nodeunit').testCase({
 

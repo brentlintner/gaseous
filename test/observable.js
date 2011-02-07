@@ -5,7 +5,7 @@ module.exports = require('nodeunit').testCase({
 
     setUp: function (done) {
         s = require('sinon').sandbox.create();
-        observable = require('./../lib/gaseous/observable').Observable();
+        observable = require('./../lib/observable').Observable();
         done();
     },
 

@@ -12,7 +12,7 @@ function _emitsDataOnCall(method, sendData, eventArgs, mockMethod, test) {
     observable.on("gaseous-socket-send",
         s.mock().once().withExactArgs(sendData));
 
-    gfs = require('./../lib/gaseous/map/fs')(observable);
+    gfs = require('./../lib/map/fs')(observable);
 
     observable.emit("gaseous-fs-" + method, eventArgs, true);
 
@@ -29,7 +29,7 @@ module.exports = require('nodeunit').testCase({
 
     setUp: function (done) {
         s = require('sinon').sandbox.create();
-        observable = require('./../lib/gaseous/observable').Observable();
+        observable = require('./../lib/observable').Observable();
         done();
     },
 

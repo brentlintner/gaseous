@@ -5,8 +5,8 @@ module.exports = require('nodeunit').testCase({
 
     setUp: function (done) {
         s = require('sinon').sandbox.create();
-        bus = require('./../lib/gaseous/observable').Observable();
-        server = require('./../lib/gaseous/server');
+        bus = require('./../lib/observable').Observable();
+        server = require('./../lib/server');
         s.stub(require('sys'), "puts");
         done();
     },
