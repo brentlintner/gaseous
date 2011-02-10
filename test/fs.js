@@ -1,4 +1,5 @@
-var s, observable, gfs,
+var s, observable,
+    map = require('./../lib/map'),
     fs = require('fs');
 
 // tests that a fs method emits socket-send properly after being called
@@ -12,7 +13,8 @@ function _emitsDataOnCall(method, sendData, eventArgs, mockMethod, test) {
     observable.on("gaseous-socket-send",
         s.mock().once().withExactArgs(sendData));
 
-    gfs = require('./../lib/map/fs')(observable);
+    map.watch(observable);
+    map.bind({fs: fs});
 
     observable.emit("gaseous-fs-" + method, eventArgs, true);
 
@@ -23,9 +25,6 @@ function _emitsDataOnCall(method, sendData, eventArgs, mockMethod, test) {
 }
 
 module.exports = require('nodeunit').testCase({
-
-    // null is used as a placeholder for a callback function (for form)
-    // since any callbacks get stripped out in the client
 
     setUp: function (done) {
         s = require('sinon').sandbox.create();

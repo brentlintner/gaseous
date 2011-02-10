@@ -64,10 +64,28 @@ module.exports = require('nodeunit').testCase({
             .once()
             .withExactArgs(process.cwd() + "/" + directory)
             .returns({
-                listen: s.mock().once().withExactArgs(5454)
+                listen: function () {}
             });
 
         cli.interpret(["node", "file.js", "server", "-p", "5454", "-d", directory]);
+        test.done();
+    },
+
+    "creates a server with modules": function (test) {
+        var directory = "relative/directory",
+            modules = {fs: require('fs')};
+
+        s.stub(server, "bind")
+            .returns({
+                listen: function () {}
+            });
+
+        s.mock(require('./../lib/map'))
+            .expects("bind")
+            .once()
+            .withExactArgs(modules);
+
+        cli.interpret(["node", "file.js", "server", "-m", "fs"]);
         test.done();
     }
 });
