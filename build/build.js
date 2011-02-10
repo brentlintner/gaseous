@@ -3,7 +3,7 @@ module.exports = function build() {
         fs = require('fs'),
         socketio = fs.readFileSync(__dirname + "/../packages/Socket.IO/socket.io.js", "utf-8"),
         uuid = fs.readFileSync(__dirname + "/../packages/Math.uuid.js", "utf-8"),
-        client = fs.readFileSync(__dirname + "/../lib/gaseous/client.js", "utf-8");
+        client = fs.readFileSync(__dirname + "/../lib/client.js", "utf-8");
     
 
     buffer = socketio + uuid +
