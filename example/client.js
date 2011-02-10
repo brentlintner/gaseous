@@ -9,9 +9,7 @@ gaseous.client.listen("127.0.0.1", 8888, function (client) {
     });
 
     client.fs.writeFile("TEST.md", "HELLO WORLD!", function (err) {
-        if (err) {
-            throw err;
-        }
+        if (err) throw err;
         console.log("TEST.md was saved!");
     });
 });
