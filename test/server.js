@@ -66,8 +66,9 @@ module.exports = require('nodeunit').testCase({
         bus.emit("gaseous-socket-send", [data]);
 
         setTimeout(function () {
-            test.ok(client.send.calledOnce, "expected socket.send to be called once");
-            test.ok(client.send.calledWithExactly(JSON.stringify(data)), "expected socket.send to be called once");
+            // initially sends out list of modules available (if any)
+            test.ok(client.send.calledTwice, "expected socket.send to be called once");
+            test.ok(client.send.getCall(1).calledWithExactly(JSON.stringify(data)), "expected socket.send to be called once");
             test.done();
         }, 1);
     },
@@ -138,13 +139,16 @@ module.exports = require('nodeunit').testCase({
             .expects("listen")
             .once()
             .returns({
+                // socket
                 on: function (type, callback) {
+                    // client
                     callback({
                         on: function (type, callback) {
                             if (type === "message") {
                                 callback(data);
                             }
-                        }
+                        },
+                        send: s.stub()
                     });
                 }
             });
@@ -158,7 +162,7 @@ module.exports = require('nodeunit').testCase({
         var data = {
                 id: "ID",
                 method: "fs-readFile",
-                args: ["some_file", "utf-8"]
+                args: ["some_file", "utf-8", "[Function]"]
             },
             socket, client;
 
@@ -182,7 +186,8 @@ module.exports = require('nodeunit').testCase({
                                 // invoke a one time message synchronously
                                 callback(JSON.stringify(data));
                             }
-                        }
+                        },
+                        send: s.stub()
                     });
                 }
             });
@@ -190,7 +195,7 @@ module.exports = require('nodeunit').testCase({
         s.mock(bus)
             .expects("emit")
             .once()
-            .withExactArgs("gaseous-fs-readFile", ["ID", "some_file", "utf-8"]);
+            .withExactArgs("gaseous-fs-readFile", ["ID", "some_file", "utf-8", "[Function]"]);
 
         server.bind("some/dir").listen(8888);
 

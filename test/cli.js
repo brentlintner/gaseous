@@ -73,7 +73,10 @@ module.exports = require('nodeunit').testCase({
 
     "creates a server with modules": function (test) {
         var directory = "relative/directory",
-            modules = {fs: require('fs')};
+            modules = {
+                fs: require('fs'),
+                events: require('events')
+            };
 
         s.stub(server, "bind")
             .returns({
@@ -85,7 +88,7 @@ module.exports = require('nodeunit').testCase({
             .once()
             .withExactArgs(modules);
 
-        cli.interpret(["node", "file.js", "server", "-m", "fs"]);
+        cli.interpret(["node", "file.js", "server", "-m", "fs,events"]);
         test.done();
     }
 });
