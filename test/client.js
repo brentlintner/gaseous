@@ -1,4 +1,4 @@
-var s, socket;
+var s, socket, client;
 
 require('./../packages/Math.uuid.js');
 
@@ -69,12 +69,13 @@ module.exports = require('nodeunit').testCase({
         var receiveMessage,
             receiveData = {
                 id: "ID",
+                callback: 2,
                 args: [null, "some file data"]
             },
             sendData = {
                 id: "ID",
                 method: "fs-readFile",
-                args: ["some_file", "utf-8", null]
+                args: ["some_file", "utf-8", "<Function>"]
             };
 
         s.mock(Math)
