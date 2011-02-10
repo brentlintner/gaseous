@@ -1,10 +1,12 @@
 # Gaseous
 
-Note: currently a work in progress.
+Expose nodejs modules in the browser (asynchronously).
 
-Gaseous exposes nodejs module apis to the browser (asynchronously).
-Currently there is only support for (most of) the fs module, but any non-blocking module call can be supported.
-That is, a call like fs.readFileSync will not work as expected whereas fs.readFile will.
+Note: Gaseous was initially developed in a black box (sans knowledge of mature and powerful alternative(s) like dnode - github.com/substack/dnode).
+But even though gaseous and dnode are (or could be) very similar, the initial goal of gaseous was to write an 
+evented, decoupled, and modular client/server framework for accessing nodejs modules in the browser. Since then dnode has been an inspiring project.
+
+So, if you find this useful or cool, give it a spin or dive into the source.
 
 ## Install
 
@@ -14,12 +16,14 @@ That is, a call like fs.readFileSync will not work as expected whereas fs.readFi
 
 A server binds to a local directory and listens on a port for any client connections.
 
-    // initiate a server
+    // bind fs and initiate a server
     var gaseous = require('gaseous');
-    gaseous.server.bind("relative/directory").listen(5678);
+    gaseous.bind({
+        fs: require('fs')
+    }).listen(5678);
 
     // with the cli
-    gaseous server -p 5678 -d relative/directory
+    gaseous server -p 5678 -m fs
 
 ## Client
 
@@ -27,8 +31,8 @@ The browser client is built as a single file, and is used to connect and interac
 
 For example: reading the contents of a file.
 
-    gaseous.client.listen("127.0.0.1", 5678, function (api) {
-        api.fs.readFile("relative/directory/file", "utf-8", function (err, data) {
+    gaseous.connect({host: "127.0.0.1", port: 5678}, function (modules) {
+        modules.fs.readFile("relative/directory/file", "utf-8", function (err, data) {
             // woot
         });
     });
@@ -55,15 +59,14 @@ To build and include the client you need to do a few things:
     // build the gaseous.js client file
     jake build
 
-    // start a server in this directory
-    bin/gaseous server
+    // run the server example (or use the cli)
+    node example/server.js
 
     // open example/client.html in a browser
     chromium-browser example/client.html
 
 ## How It Works
 
-The client side api is mapped to its respective nodejs module.
 The client/server runs on top of socket.io.
 
 There is a caveat in that everything is async, so only certain methods are feasible. 
@@ -78,7 +81,7 @@ For example, for fs.readFile the packet would look something like this:
         "args": [
             "relative/directory/file",
             "utf-8",
-            null // callback placeholder
+            "[Function]"
         ]
     }
 
@@ -88,6 +91,7 @@ For example, a successful call (to say fs.readFile) would look something like th
 
     {
         "id": "uuid",
+        "callback": 2 // the index of the callback invoked
         "args": [
             null,
             "file_data"
@@ -100,3 +104,6 @@ For example, a successful call (to say fs.readFile) would look something like th
 * mixin EventEmitter instead of using Observable class
 * handle multiple connections (i.e. listen on multiple ports)
 * pass in an optional server to bind to instead of creating one (i.e. support express, connect etc)
+* support recursive objects (i.e. at the moment, only second level functions are mapped)
+* client uses events and supports connect/disconnect/ready events (and anything else worthy)
+* make client compat lib for older browsers (ex. Object.keys)
