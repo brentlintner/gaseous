@@ -26,9 +26,9 @@ module.exports = function showStats() {
                 }
             });
 
-            file = file.replace(/\.js$/, '');
+            file = file.replace(/(test|lib)\//, '');
 
-            sys.puts("| " + file + spaces(34 - file.length) + "| " +
+            sys.puts("| " + file + spaces(30 - file.length) + "| " +
                     lines + spaces(7 - String(lines).length) + "| " +
                     loc + spaces(7 - String(loc).length) + "|");
 
@@ -50,21 +50,21 @@ module.exports = function showStats() {
     }
 
     function printTotals() {
-        sys.puts("+-----------------------------------+--------+--------+");
-        sys.print("| Total                             |");
+        sys.puts("+-------------------------------+--------+--------+");
+        sys.print("| Total                         |");
         sys.print(" " + total_lines + spaces(7 - String(total_lines).length) + "|");
         sys.puts(" " + total_loc + spaces(7 - String(total_loc).length) + "|");
-        sys.puts("+-----------------------------------+--------+--------+");
+        sys.puts("+-------------------------------+--------+--------+");
     }
 
-    collect(["lib/gaseous/*.js"], function (lib) {
+    collect(["lib/*.js"], function (lib) {
         var lib_loc = 0;
         total_lines = 0;
         total_loc = 0;
 
-        sys.puts("+-----------------------------------+--------+--------+");
-        sys.puts("| Lib                               | Lines  | LOC    |");
-        sys.puts("+-----------------------------------+--------+--------+");
+        sys.puts("+-------------------------------+--------+--------+");
+        sys.puts("| Lib                           | Lines  | LOC    |");
+        sys.puts("+-------------------------------+--------+--------+");
 
         lib.forEach(parseFile);
 
@@ -76,15 +76,15 @@ module.exports = function showStats() {
             total_lines = 0;
             total_loc = 0;
 
-            sys.puts("| Tests                             | Lines  | LOC    |");
-            sys.puts("+-----------------------------------+--------+--------+");
+            sys.puts("| Tests                         | Lines  | LOC    |");
+            sys.puts("+-------------------------------+--------+--------+");
 
             tests.forEach(parseFile);
 
             printTotals();
 
             sys.puts("| Ratio (tests/lib) (" + (total_loc / lib_loc) + ")");
-            sys.puts("+-----------------------------------+--------+--------+");
+            sys.puts("+-------------------------------+--------+--------+");
         });
     });
 };
