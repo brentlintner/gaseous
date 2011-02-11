@@ -1,6 +1,7 @@
 var s,
     fs = require('fs'),
     sys = require('sys'),
+    map = require('./../lib/map'),
     server = require('./../lib/server'),
     cli = require('./../lib/cli');
 
@@ -31,13 +32,12 @@ module.exports = require('nodeunit').testCase({
     },
 
     "creates a server on default port": function (test) {
+        
+        s.stub(map, "map");
         s.mock(server)
-            .expects("bind")
+            .expects("listen")
             .once()
-            .withExactArgs(process.cwd())
-            .returns({
-                listen: s.mock().once().withExactArgs(8888)
-            });
+            .withExactArgs(8888);
 
         cli.interpret(["node", "file.js", "server"]);
         test.done();
@@ -45,29 +45,11 @@ module.exports = require('nodeunit').testCase({
 
     "creates a server on custom port": function (test) {
         s.mock(server)
-            .expects("bind")
+            .expects("listen")
             .once()
-            .withExactArgs(process.cwd())
-            .returns({
-                listen: s.mock().once().withExactArgs(9797)
-            });
+            .withExactArgs(9797);
 
         cli.interpret(["node", "file.js", "server", "-p", "9797"]);
-        test.done();
-    },
-
-    "creates a server on custom directory": function (test) {
-        var directory = "relative/directory";
-
-        s.mock(server)
-            .expects("bind")
-            .once()
-            .withExactArgs(process.cwd() + "/" + directory)
-            .returns({
-                listen: function () {}
-            });
-
-        cli.interpret(["node", "file.js", "server", "-p", "5454", "-d", directory]);
         test.done();
     },
 
@@ -78,13 +60,9 @@ module.exports = require('nodeunit').testCase({
                 events: require('events')
             };
 
-        s.stub(server, "bind")
-            .returns({
-                listen: function () {}
-            });
-
-        s.mock(require('./../lib/map'))
-            .expects("bind")
+        s.stub(server, "listen");
+        s.mock(map)
+            .expects("map")
             .once()
             .withExactArgs(modules);
 

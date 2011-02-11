@@ -14,7 +14,7 @@ function _emitsDataOnCall(method, sendData, eventArgs, mockMethod, test) {
         s.mock().once().withExactArgs(sendData));
 
     map.watch(observable);
-    map.bind({fs: fs});
+    map.map({fs: fs});
 
     observable.emit("gaseous-fs-" + method, eventArgs, true);
 

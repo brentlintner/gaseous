@@ -18,7 +18,7 @@ A server binds to a local directory and listens on a port for any client connect
 
     // bind fs and initiate a server
     var gaseous = require('gaseous');
-    gaseous.bind({
+    gaseous.map({
         fs: require('fs')
     }).listen(5678);
 
@@ -33,6 +33,7 @@ For example: reading the contents of a file.
 
     var options = {host: "127.0.0.1", port: 5678};
     gaseous.connect(function (modules) {
+        // gaseous.modules can now be referenced
         modules.fs.readFile("relative/directory/file", "utf-8", function (err, data) {
             // woot
         });

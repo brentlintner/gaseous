@@ -6,6 +6,6 @@ Commands:
 
   == server    boots a server in the current directory
 
-     -d        custom directory
+     -m        map modules (ex -m fs,events)
      -p        custom port
 

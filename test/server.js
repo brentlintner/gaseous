@@ -18,11 +18,74 @@ module.exports = require('nodeunit').testCase({
         done();
     },
 
-    "server listenes for socket-send": function (test) {
+    "server listens for socket-send": function (test) {
         var spy = s.spy(bus, "on");
         server.watch(bus);
         test.ok(spy.calledOnce);
         test.ok(spy.calledWith("gaseous-socket-send"));
+        test.done();
+    },
+
+    "listen creates server": function (test) {
+        server.watch(bus);
+
+        s.mock(require('http'))
+            .expects("createServer")
+            .once()
+            .returns({
+                listen: s.mock().once().withExactArgs(8888)
+            });
+
+        s.stub(io, "listen")
+            .returns({
+                on: s.stub()
+            });
+
+        server.listen();
+        test.done();
+    },
+
+    "listen creates custom server": function (test) {
+        server.watch(bus);
+
+        var customServer = {
+            listen: s.mock().once().withExactArgs(8787)
+        };
+
+        s.mock(require('http'))
+            .expects("createServer")
+            .never();
+
+        s.stub(io, "listen")
+            .returns({
+                on: s.stub()
+            });
+
+        server.listen({
+            port: 8787, 
+            server: customServer
+        });
+
+        test.done();
+    },
+
+    "listen uses a socket.io server": function (test) {
+        server.watch(bus);
+        s.mock(require('http'))
+            .expects("createServer")
+            .once()
+            .returns({
+                listen: s.mock().once().withExactArgs(8888)
+            });
+
+        s.mock(io)
+            .expects("listen")
+            .once()
+            .returns({
+                on: s.mock().once().withArgs("connection")
+            });
+
+        server.listen();
         test.done();
     },
 
@@ -61,7 +124,7 @@ module.exports = require('nodeunit').testCase({
                 }
             });
 
-        server.bind("some/dir").listen(8888);
+        server.listen({port: 8888});
 
         bus.emit("gaseous-socket-send", [data]);
 
@@ -71,53 +134,6 @@ module.exports = require('nodeunit').testCase({
             test.ok(client.send.getCall(1).calledWithExactly(JSON.stringify(data)), "expected socket.send to be called once");
             test.done();
         }, 1);
-    },
-
-    "bind creates server": function (test) {
-        server.watch(bus);
-        s.mock(require('http'))
-            .expects("createServer")
-            .once()
-            .returns(42);
-        test.equal(server.bind("some/dir"), 42, "server was not created");
-        test.done();
-    },
-
-    "bind creates server with wrapped listen method": function (test) {
-        server.watch(bus);
-        var listen = function () {};
-
-        s.mock(require('http'))
-            .expects("createServer")
-            .once()
-            .returns({
-                listen: listen
-            });
-
-        server.bind("some/dir");
-
-        test.notStrictEqual(server.listen, listen, "expected a wrapped method"); 
-        test.done();
-    },
-
-    "listen uses a socket.io server": function (test) {
-        server.watch(bus);
-        s.mock(require('http'))
-            .expects("createServer")
-            .once()
-            .returns({
-                listen: s.mock().once().withExactArgs(8888)
-            });
-
-        s.mock(io)
-            .expects("listen")
-            .once()
-            .returns({
-                on: s.mock().once().withArgs("connection")
-            });
-
-        server.bind("some/dir").listen(8888);
-        test.done();
     },
 
     "listens for client message": function (test) {
@@ -153,7 +169,7 @@ module.exports = require('nodeunit').testCase({
                 }
             });
 
-        server.bind("some/dir").listen(8888);
+        server.listen();
         test.done();
     },
 
@@ -166,9 +182,7 @@ module.exports = require('nodeunit').testCase({
             },
             socket, client;
 
-        s.mock(require('http'))
-            .expects("createServer")
-            .once()
+        s.stub(require('http'), "createServer")
             .returns({
                 listen: s.mock().once().withExactArgs(8888)
             });
@@ -197,7 +211,7 @@ module.exports = require('nodeunit').testCase({
             .once()
             .withExactArgs("gaseous-fs-readFile", ["ID", "some_file", "utf-8", "[Function]"]);
 
-        server.bind("some/dir").listen(8888);
+        server.listen();
 
         test.done();
     }

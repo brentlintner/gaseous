@@ -40,7 +40,6 @@ module.exports = require('nodeunit').testCase({
         test.done();
     },
 
-    // TODO: find way to sync this up with other tests (fs in this case)
     "client exposes modules": function (test) {
         s.stub(io, "Socket")
             .returns(socket = {
