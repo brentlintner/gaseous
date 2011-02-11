@@ -31,11 +31,12 @@ The browser client is built as a single file, and is used to connect and interac
 
 For example: reading the contents of a file.
 
-    gaseous.connect({host: "127.0.0.1", port: 5678}, function (modules) {
+    var options = {host: "127.0.0.1", port: 5678};
+    gaseous.connect(function (modules) {
         modules.fs.readFile("relative/directory/file", "utf-8", function (err, data) {
             // woot
         });
-    });
+    }, options);
 
 ## Getting Started
 

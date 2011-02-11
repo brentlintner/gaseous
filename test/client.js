@@ -20,7 +20,7 @@ module.exports = require('nodeunit').testCase({
         done();
     },
 
-    "listen creates client and calls ready": function (test) {
+    "connect creates client and calls ready": function (test) {
         s.mock(io)
             .expects("Socket")
             .once()
@@ -32,7 +32,7 @@ module.exports = require('nodeunit').testCase({
             });
 
         // would in reality be async
-        client.listen(null, null, s.mock().once());
+        client.connect(s.mock().once());
 
         test.ok(socket.connect.calledOnce, "expected socket.connect to be called once");
         test.ok(socket.on.calledOnce, "expected socket.on to be called once");
@@ -53,7 +53,7 @@ module.exports = require('nodeunit').testCase({
                 })
             });
 
-        client.listen(null, null, function (lib) {
+        client.connect(function (lib) {
             test.equal(typeof lib.fs, "object", "fs is not an object");
             test.equal(typeof lib.fs.readFile, "function", "fs.readFile is not a function");
             test.done();
@@ -95,7 +95,7 @@ module.exports = require('nodeunit').testCase({
 //                }
 //            });
 //
-//        client.listen(null, null, function (lib) {
+//        client.connect(function (lib) {
 //            lib.fs.readFile("some_file", "utf-8", function (err, data) {
 //                test.strictEqual(data, receiveData.args[1], "unexpected message data");
 //                test.done();
