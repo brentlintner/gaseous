@@ -20,10 +20,10 @@ A server binds to a local directory and listens on a port for any client connect
     var gaseous = require('gaseous');
     gaseous.map({
         fs: require('fs')
-    }).listen(5678);
+    }).listen();
 
     // with the cli
-    gaseous server -p 5678 -m fs
+    gaseous server -m fs
 
 ## Client
 
@@ -31,13 +31,12 @@ The browser client is built as a single file, and is used to connect and interac
 
 For example: reading the contents of a file.
 
-    var options = {host: "127.0.0.1", port: 5678};
     gaseous.connect(function (modules) {
         // gaseous.modules can now be referenced
         modules.fs.readFile("relative/directory/file", "utf-8", function (err, data) {
             // woot
         });
-    }, options);
+    });
 
 ## Getting Started
 

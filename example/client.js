@@ -1,8 +1,3 @@
-var options = {
-    host: "127.0.0.1",
-    port: 8888
-};
-
 function ready(modules) {
     var fs = modules.fs;
 
@@ -21,4 +16,4 @@ function ready(modules) {
     });
 }
 
-gaseous.connect(ready, options);
+gaseous.connect(ready);
