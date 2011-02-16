@@ -32,12 +32,11 @@ module.exports = require('nodeunit').testCase({
     },
 
     "creates a server on default port": function (test) {
-        
         s.stub(map, "map");
         s.mock(server)
             .expects("listen")
             .once()
-            .withExactArgs(8888);
+            .withExactArgs({port: 8888});
 
         cli.interpret(["node", "file.js", "server"]);
         test.done();
@@ -47,7 +46,7 @@ module.exports = require('nodeunit').testCase({
         s.mock(server)
             .expects("listen")
             .once()
-            .withExactArgs(9797);
+            .withExactArgs({port: 9797});
 
         cli.interpret(["node", "file.js", "server", "-p", "9797"]);
         test.done();
