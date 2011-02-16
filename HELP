@@ -4,6 +4,8 @@ Commands:
 
   == help      displays this file
 
+  == build     builds a browser client file in the current directory
+
   == server    boots a server in the current directory
 
      -m        map modules (ex -m fs,events)

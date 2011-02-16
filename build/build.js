@@ -1,4 +1,4 @@
-module.exports = function build() {
+module.exports = function () {
     var buffer,
         fs = require('fs'),
         socketio = fs.readFileSync(__dirname + "/../packages/Socket.IO/socket.io.js", "utf-8"),

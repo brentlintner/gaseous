@@ -1,4 +1,4 @@
-module.exports = function showStats() {
+module.exports = function () {
     var glob = require('glob'),
         sys = require('sys'),
         total_lines,

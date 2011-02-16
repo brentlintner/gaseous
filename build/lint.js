@@ -1,4 +1,4 @@
-module.exports = function lint() {
+module.exports = function () {
     var files = Array.prototype.slice.call(arguments),
         args = files.length > 0 ? files : ["test/", "lib/", "build"],
         options = ["--config", "build/.jslintrc", "--reporter", "build/reporter.js"],

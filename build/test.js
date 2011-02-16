@@ -1,4 +1,4 @@
-module.exports = function run() {
+module.exports = function () {
     var args = Array.prototype.map.call(arguments, function (test) {
             return "test/" + test + ".js";
         }), cmd,
