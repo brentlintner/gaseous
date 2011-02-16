@@ -1,6 +1,6 @@
 {
   "name": "gaseous",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "exposes nodejs module apis to the browser",
   "homepage": "http://github.com/brentlintner/gaseous",
   "author": {
