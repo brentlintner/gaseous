@@ -64,6 +64,9 @@ You have to build the browser client file to use it. First, make sure you:
     // build the gaseous.js browser client and include it in your markup file
     jake build
 
+    // or use the cli
+    gaseous build
+
     // run the server example (or use the cli)
     node example/server.js
 
