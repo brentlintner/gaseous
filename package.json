@@ -19,6 +19,23 @@
   }],
   "bin": "./bin/gaseous",
   "main": "./lib",
+  "files": [
+    "packages/Socket.IO/README.md",
+    "packages/Socket.IO/socket.io.js",
+    "packages/Socket.IO-node/README.md",
+    "packages/Socket.IO-node/lib",
+    "packages/Socket.IO-node/support/node-websocket-client/lib",
+    "packages/Socket.IO-node/support/node-websocket-client/LICENSE",
+    "packages/Socket.IO-node/support/node-websocket-client/README.md",
+    "packages/Socket.IO-node/support/socket.io-client/lib",
+    "packages/Socket.IO-node/support/socket.io-client/README.md",
+    "packages/Socket.IO-node/index.js",
+    "packages/Math.uuid.js",
+    "build/build.js",
+    "README.md",
+    "LICENSE",
+    "HELP"
+  ],
   "dependencies": {
     "argsparser": ">=0.0.3"
   }
