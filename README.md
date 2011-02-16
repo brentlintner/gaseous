@@ -2,9 +2,9 @@
 
 Expose nodejs modules in the browser (asynchronously).
 
-Note: Gaseous was initially developed in a black box (sans knowledge of mature and powerful alternative(s) like dnode - github.com/substack/dnode).
+Note: Gaseous was initially developed in a black box (sans knowledge of mature, flexible and powerful alternative(s) like dnode - github.com/substack/dnode).
 But even though gaseous and dnode are (or could be) very similar, the initial goal of gaseous was to write an 
-evented, decoupled, and modular client/server framework for accessing nodejs modules in the browser. Since then dnode has been an inspiring project.
+evented, decoupled, and modular client/server framework for accessing nodejs module apis in the browser. Since then dnode has been an inspiring project.
 
 So, if you find this useful or cool, give it a spin or dive into the source.
 
@@ -12,9 +12,7 @@ So, if you find this useful or cool, give it a spin or dive into the source.
 
     npm install gaseous
 
-## Server
-
-A server binds to a local directory and listens on a port for any client connections.
+## Starting A Server
 
     // bind fs and initiate a server
     var gaseous = require('gaseous');
@@ -25,9 +23,9 @@ A server binds to a local directory and listens on a port for any client connect
     // with the cli
     gaseous server -m fs
 
-## Client
+## Using The Client
 
-The browser client is built as a single file, and is used to connect and interact with a server instance from the browser.
+The client is used to connect and interact with a server instance. 
 
 For example: reading the contents of a file.
 
@@ -40,12 +38,18 @@ For example: reading the contents of a file.
 
 ## Getting Started
 
-To build and include the client you need to do a few things:
+You have to build the browser client file to use it. First, make sure you:
 
-    // configure and install any dependencies
-    ./configure
+    // initialize submodules 
+    git submodule init
+    git submodule update
 
-    // build browser client (creates gasious.js)
+    // install some extra npm packages
+    npm install jake nodeunit sinon catchjs glob argsparser
+
+## Build Commands
+
+    // build the browser client
     jake
     jake build
 
@@ -57,7 +61,7 @@ To build and include the client you need to do a few things:
 
 ## Example
 
-    // build the gaseous.js client file
+    // build the gaseous.js browser client and include it in your markup file
     jake build
 
     // run the server example (or use the cli)
@@ -108,3 +112,4 @@ For example, a successful call (to say fs.readFile) would look something like th
 * support recursive objects (i.e. at the moment, only second level functions are mapped)
 * client uses events and supports connect/disconnect/ready events (and anything else worthy)
 * make client compat lib for older browsers (ex. Object.keys)
+* tweak lib/client to dually work as a commonjs module (in node)

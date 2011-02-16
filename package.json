@@ -20,6 +20,6 @@
   "bin": "./bin/gaseous",
   "main": "./lib",
   "dependencies": {
-    "argsparser": "*"
+    "argsparser": ">=0.0.3"
   }
 }
