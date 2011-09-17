@@ -1,12 +1,10 @@
 # Gaseous
 
-Expose nodejs modules in the browser (asynchronously).
+Expose nodejs modules in the browser.
 
-Note: Gaseous was initially developed in a black box (sans knowledge of mature, flexible and powerful alternative(s) like dnode - github.com/substack/dnode).
-But even though gaseous and dnode are (or could be) very similar, the initial goal of gaseous was to write an 
-evented, decoupled, and modular client/server framework for accessing nodejs module apis in the browser. Since then dnode has been an inspiring project.
+_Note:_ This is still a work in progress, use at your own risk, or see alternatives (like nowjs or dnode).
 
-So, if you find this useful or cool, give it a spin or dive into the source.
+But... If you find this useful or cool, give it a spin or dive into the source.
 
 ## Install
 
